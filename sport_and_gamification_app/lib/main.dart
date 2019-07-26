@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sport_and_gamification_domain/domain.dart';
 
 void main() => runApp(MyApp());
+
+Level level = new Level(1, 1, 1);
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -98,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            Text(level.toString())
           ],
         ),
       ),

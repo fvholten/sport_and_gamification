@@ -210,6 +210,13 @@ class Task implements DomainObject {
 }
 
 class Level {
+
+  Level(num levelNumber, num minXp, num maxXp) {
+    this.levelNumber = levelNumber;
+    this.minXp  = minXp;
+    this.maxXp = maxXp;
+  }
+
   num levelNumber;
   num minXp;
   num maxXp;

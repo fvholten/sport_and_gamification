@@ -93,6 +93,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  sport_and_gamification_domain:
+    dependency: "direct main"
+    description:
+      path: "../sport_and_gamification_domain"
+      relative: true
+    source: path
+    version: "0.0.1"
   stack_trace:
     dependency: transitive
     description:
