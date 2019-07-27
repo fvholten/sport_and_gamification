@@ -17,6 +17,7 @@ abstract class User implements DomainObject {
 
 ///Die Schüler-Spieler
 class Player implements User {
+  
   @override
   String id;
   @override
@@ -39,7 +40,13 @@ class Player implements User {
 
   Club club;
   List<Mission> missions; ///Trainingsziele
-  List<Task> tasks; ///Tasks done
+  List<Task> tasks;
+
+  Player(this.id, this.image, this.name, this.email, this.lastLogin,
+      this.history, this.description, this.look, this.friends, this.xp,
+      this.level, this.resources, this.club, this.missions, this.tasks);
+
+///Tasks done
 }
 
 ///Tainingsziel für Spieler
@@ -57,6 +64,9 @@ class Mission implements DomainObject {
 
   ///100% -> done | 0% -> not done
   num progress = 0;
+
+  Mission(this.id, this.image, this.title, this.story, this.objective,
+      this.progress);
 }
 
 ///Trainer
@@ -73,11 +83,16 @@ class Trainer implements User {
   var lastLogin;
 
   Club club;
-  List<Adventure> trainingGroups;
 
+  List<Adventure> trainingGroups;
   List<Quest> questsPool;///Pool of quest for Trainers to choose from
-  List<Event> eventsPool;///Pool of events to choose from
+
   List<Exercise> exerciseExercise;  ///Exercise pool
+  List<Event> eventsPool;///Pool of events to choose from
+
+  Trainer(this.id, this.image, this.name, this.email, this.lastLogin, this.club,
+      this.trainingGroups, this.questsPool, this.eventsPool,
+      this.exerciseExercise);
 }
 
 ///Der Verein
@@ -100,8 +115,16 @@ class Club implements DomainObject {
   List<Event> eventsPool;///Pool of events to choose from
   List<Exercise> exerciseExercise;  ///Exercise pool
   List<Skill> skillPool;  ///Skills werden benötigt um Tasks zu machen
-  List<Trainer> trainerPool;///Trainer
-///
+  List<Trainer> trainerPool;
+
+  Club(this.id, this.image, this.name, this.description, this.story,
+      this.history, this.taskPool, this.playerPool, this.trainingGroups,
+      this.questsPool, this.eventsPool, this.exerciseExercise, this.skillPool,
+      this.trainerPool);
+
+///Trainer
+
+
 }
 
 ///Trainingsgruppen
@@ -124,6 +147,9 @@ class Adventure implements DomainObject {
 
   ///Die Schüler
   List<Player> player;
+
+  Adventure(this.id, this.image, this.title, this.story, this.trainings,
+      this.trainer, this.player);
 }
 
 ///Ein Training
@@ -150,11 +176,16 @@ class Quest implements DomainObject {
   List<Resource> reward;
   ///Für die Teilnahme am Training
   num xp;
+
+  Quest(this.id, this.image, this.date, this.duration, this.title, this.story,
+      this.player, this.events, this.participations, this.reward, this.xp);
 }
 
 class Participation {
   Event event;
   List<Player> players;
+
+  Participation(this.event, this.players);
 }
 
 ///Aufgabe im Training
@@ -172,6 +203,9 @@ class Event implements DomainObject {
 
   num xp;
   List<Resource> reward;
+
+  Event(this.id, this.image, this.title, this.story, this.description,
+      this.exercise, this.xp, this.reward);
 }
 
 ///Die Übung
@@ -186,6 +220,9 @@ class Exercise implements DomainObject{
   String description;
 
   num difficultyRating;
+
+  Exercise(this.id, this.image, this.title, this.description,
+      this.difficultyRating);
 }
 
 
@@ -207,19 +244,18 @@ class Task implements DomainObject {
   List<Skill> skillRequired;
   num xp;
   List<Resource> reward;
+
+  Task(this.id, this.image, this.start, this.end, this.title, this.story,
+      this.description, this.skillRequired, this.xp, this.reward);
 }
 
 class Level {
 
-  Level(num levelNumber, num minXp, num maxXp) {
-    this.levelNumber = levelNumber;
-    this.minXp  = minXp;
-    this.maxXp = maxXp;
-  }
-
   num levelNumber;
   num minXp;
   num maxXp;
+
+  Level(this.levelNumber, this.minXp, this.maxXp);
 }
 
 abstract class CharacterLook {}
@@ -233,6 +269,10 @@ class Skill implements DomainObject {
 
   String name;
   String description;
+
+  Skill(this.id, this.image, this.name, this.description);
+
+
 }
 
 abstract class Resource {
