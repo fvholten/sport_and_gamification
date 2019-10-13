@@ -1,23 +1,28 @@
 library sport_and_gamification_domain;
 
 abstract class DomainObject {
+  const DomainObject({this.id, this.image});
+
   ///Eindeutige Id
-  String id;
+  final String id;
 
   ///Bild
-  String image;
+  final String image;
 }
 
 ///Nutzer der App
 abstract class User implements DomainObject {
-  String name;
-  String email;
-  var lastLogin;
+  const User({this.name, this.email, this.lastLogin});
+
+  final String name;
+  final String email;
+  final DateTime lastLogin;
 }
 
 ///Die Schüler-Spieler
 class Player implements User {
-  
+  Player({this.id, this.image});
+
   @override
   String id;
   @override
@@ -27,7 +32,7 @@ class Player implements User {
   @override
   String email;
   @override
-  var lastLogin;
+  DateTime lastLogin;
 
   String history;
   String description;
@@ -39,14 +44,31 @@ class Player implements User {
   List<Resource> resources;
 
   Club club;
-  List<Mission> missions; ///Trainingsziele
+  List<Mission> missions;
+
+  ///Trainingsziele
   List<Task> tasks;
 
-  Player(this.id, this.image, this.name, this.email, this.lastLogin,
-      this.history, this.description, this.look, this.friends, this.xp,
-      this.level, this.resources, this.club, this.missions, this.tasks);
+  ///Tasks done
 
-///Tasks done
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'image': image,
+      'name': name,
+      'email': email,
+      'history': history,
+      'description': description,
+      'look': look,
+      'friends': friends,
+      'xp': xp,
+      'level': level,
+      'resources': resources,
+      'club': club,
+      'missions': missions,
+      'tasks': tasks,
+    };
+  }
 }
 
 ///Tainingsziel für Spieler
@@ -85,13 +107,27 @@ class Trainer implements User {
   Club club;
 
   List<Adventure> trainingGroups;
-  List<Quest> questsPool;///Pool of quest for Trainers to choose from
+  List<Quest> questsPool;
 
-  List<Exercise> exerciseExercise;  ///Exercise pool
-  List<Event> eventsPool;///Pool of events to choose from
+  ///Pool of quest for Trainers to choose from
 
-  Trainer(this.id, this.image, this.name, this.email, this.lastLogin, this.club,
-      this.trainingGroups, this.questsPool, this.eventsPool,
+  List<Exercise> exerciseExercise;
+
+  ///Exercise pool
+  List<Event> eventsPool;
+
+  ///Pool of events to choose from
+
+  Trainer(
+      this.id,
+      this.image,
+      this.name,
+      this.email,
+      this.lastLogin,
+      this.club,
+      this.trainingGroups,
+      this.questsPool,
+      this.eventsPool,
       this.exerciseExercise);
 }
 
@@ -107,23 +143,47 @@ class Club implements DomainObject {
   String story;
   String history;
 
-  List<Task> taskPool;///Besondere Aufgaben
-  List<Player> playerPool;///Mitglieder
+  List<Task> taskPool;
 
-  List<Adventure> trainingGroups;///Training Groups available
-  List<Quest> questsPool;///Pool of quest for Trainers to choose from
-  List<Event> eventsPool;///Pool of events to choose from
-  List<Exercise> exerciseExercise;  ///Exercise pool
-  List<Skill> skillPool;  ///Skills werden benötigt um Tasks zu machen
+  ///Besondere Aufgaben
+  List<Player> playerPool;
+
+  ///Mitglieder
+
+  List<Adventure> trainingGroups;
+
+  ///Training Groups available
+  List<Quest> questsPool;
+
+  ///Pool of quest for Trainers to choose from
+  List<Event> eventsPool;
+
+  ///Pool of events to choose from
+  List<Exercise> exerciseExercise;
+
+  ///Exercise pool
+  List<Skill> skillPool;
+
+  ///Skills werden benötigt um Tasks zu machen
   List<Trainer> trainerPool;
 
-  Club(this.id, this.image, this.name, this.description, this.story,
-      this.history, this.taskPool, this.playerPool, this.trainingGroups,
-      this.questsPool, this.eventsPool, this.exerciseExercise, this.skillPool,
+  Club(
+      this.id,
+      this.image,
+      this.name,
+      this.description,
+      this.story,
+      this.history,
+      this.taskPool,
+      this.playerPool,
+      this.trainingGroups,
+      this.questsPool,
+      this.eventsPool,
+      this.exerciseExercise,
+      this.skillPool,
       this.trainerPool);
 
-///Trainer
-
+  ///Trainer
 
 }
 
@@ -166,14 +226,19 @@ class Quest implements DomainObject {
 
   ///Plot des Trainings
   String story;
+
   ///Wer ist gekommen
   List<Player> player;
+
   ///Was wird gemacht
   List<Event> events;
+
   ///Wer tat was
   List<Participation> participations;
+
   ///Für die Teilnahme
   List<Resource> reward;
+
   ///Für die Teilnahme am Training
   num xp;
 
@@ -209,8 +274,7 @@ class Event implements DomainObject {
 }
 
 ///Die Übung
-class Exercise implements DomainObject{
-
+class Exercise implements DomainObject {
   @override
   String id;
   @override
@@ -221,10 +285,9 @@ class Exercise implements DomainObject{
 
   num difficultyRating;
 
-  Exercise(this.id, this.image, this.title, this.description,
-      this.difficultyRating);
+  Exercise(
+      this.id, this.image, this.title, this.description, this.difficultyRating);
 }
-
 
 ///Aufgabe neben dem Training (extra Aufgaben wie: Laufen gehen oder Turniere etc.) Werden im Club geplegt.
 class Task implements DomainObject {
@@ -250,7 +313,6 @@ class Task implements DomainObject {
 }
 
 class Level {
-
   num levelNumber;
   num minXp;
   num maxXp;
@@ -259,7 +321,6 @@ class Level {
 }
 
 abstract class CharacterLook {}
-
 
 class Skill implements DomainObject {
   @override
@@ -271,8 +332,6 @@ class Skill implements DomainObject {
   String description;
 
   Skill(this.id, this.image, this.name, this.description);
-
-
 }
 
 abstract class Resource {
