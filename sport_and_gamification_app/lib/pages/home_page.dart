@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sport_and_gamification_app/pages/create_user_page.dart';
 import 'package:sport_and_gamification_app/pages/my_profile_page.dart';
 import 'package:sport_and_gamification_app/services/authentication.dart';
+import 'package:sport_and_gamification_domain/domain.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.onSignedOut})
@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  static Player _player = Player()..name = ""..description = ""..history = "";
 
   @override
   void initState() {
@@ -44,7 +45,14 @@ class _HomePageState extends State<HomePage> {
             createPlayer();
           });
         });
-      } else {}
+      } else {
+        print(snapshot);
+        setState(() {
+          _player.name = snapshot.data['name'];
+          _player.description = snapshot.data['description'];
+          _player.history = snapshot.data['history'];
+        });
+      }
     }).catchError((error) => print(error.toString()));
   }
 
@@ -88,7 +96,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _widgetOptions = <Widget>[
     Container(),
-    new MyProfilePage(),
+    new MyProfilePage(player: _player),
   ];
 
   _signOut() async {

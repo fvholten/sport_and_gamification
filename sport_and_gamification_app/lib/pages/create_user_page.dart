@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sport_and_gamification_app/widget/account_info.dart';
 import 'package:sport_and_gamification_domain/domain.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -23,9 +24,12 @@ class _CreateUserState extends State<CreateUserPage> {
 
   final Firestore db = Firestore.instance;
 
-  Player player = new Player()..name = "";
-  
-  PageController _pageController = PageController(viewportFraction: 0.9);
+  Player player = new Player()
+    ..name = ""
+    ..description = ""
+    ..history = "";
+
+  PageController _pageController = PageController(viewportFraction: 1);
 
   @override
   void initState() {
@@ -66,7 +70,8 @@ class _CreateUserState extends State<CreateUserPage> {
                         });
                       },
                       maxLength: 35),
-                )
+                ),
+                Text(player.name)
               ],
             ),
             false),
@@ -75,13 +80,18 @@ class _CreateUserState extends State<CreateUserPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Wellcome ${player.name}. Tell us about your History:',
+                  'Wellcome ${player.name}. Describe yourself:',
                   textAlign: TextAlign.center,
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(40, 30, 40, 0),
                   child: TextField(
                       textAlign: TextAlign.center,
+                      onChanged: (value) {
+                        setState(() {
+                          player.description = value;
+                        });
+                      },
                       maxLines: 10,
                       maxLength: 500,
                       autofocus: false),
@@ -101,11 +111,24 @@ class _CreateUserState extends State<CreateUserPage> {
                   padding: EdgeInsets.fromLTRB(40, 30, 40, 0),
                   child: TextField(
                       textAlign: TextAlign.center,
+                      onChanged: (value) {
+                        setState(() {
+                          player.history = value;
+                        });
+                      },
                       maxLines: 10,
                       maxLength: 500,
                       autofocus: false),
                 )
               ],
+            ),
+            false),
+        makePage(
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: AccountInfo(player: player)
+              ),
             ),
             true)
       ],
@@ -119,7 +142,7 @@ class _CreateUserState extends State<CreateUserPage> {
     return new Scaffold(
       body: content,
       floatingActionButton: new FloatingActionButton(
-        heroTag: 'FAB${fabCount}',
+        heroTag: 'FAB$fabCount',
         child: Icon(isLast ? Icons.arrow_forward : Icons.arrow_downward),
         onPressed: () {
           if (isLast) {
@@ -131,7 +154,7 @@ class _CreateUserState extends State<CreateUserPage> {
       ),
     );
   }
-  
+
   void saveToFireStore() {
     player.id = id;
     player.email = email;
