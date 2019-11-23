@@ -1,5 +1,9 @@
 library sport_and_gamification_domain;
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'domain.g.dart';
+
 abstract class DomainObject {
   const DomainObject({this.id, this.image});
 
@@ -20,6 +24,7 @@ abstract class User implements DomainObject {
 }
 
 ///Die Schüler-Spieler
+@JsonSerializable()
 class Player implements User {
   Player({this.id, this.image});
 
@@ -36,12 +41,12 @@ class Player implements User {
 
   String history;
   String description;
-  CharacterLook look;
+  //CharacterLook look;
   List<Player> friends;
 
   num xp;
   Level level;
-  List<Resource> resources;
+  //List<Resource> resources;
 
   Club club;
   List<Mission> missions;
@@ -49,29 +54,13 @@ class Player implements User {
   ///Trainingsziele
   List<Task> tasks;
 
-  ///Tasks done
+  factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'image': image,
-      'name': name,
-      'email': email,
-      'history': history,
-      'description': description,
-      'look': look,
-      'friends': friends,
-      'xp': xp,
-      'level': level,
-      'resources': resources,
-      'club': club,
-      'missions': missions,
-      'tasks': tasks,
-    };
-  }
+  Map<String, dynamic> toJson() => _$PlayerToJson(this);
 }
 
 ///Tainingsziel für Spieler
+@JsonSerializable()
 class Mission implements DomainObject {
   @override
   String id;
@@ -89,9 +78,14 @@ class Mission implements DomainObject {
 
   Mission(this.id, this.image, this.title, this.story, this.objective,
       this.progress);
+
+  factory Mission.fromJson(Map<String, dynamic> json) => _$MissionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MissionToJson(this);
 }
 
 ///Trainer
+@JsonSerializable()
 class Trainer implements User {
   @override
   String id;
@@ -129,9 +123,14 @@ class Trainer implements User {
       this.questsPool,
       this.eventsPool,
       this.exerciseExercise);
+
+  factory Trainer.fromJson(Map<String, dynamic> json) => _$TrainerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TrainerToJson(this);
 }
 
 ///Der Verein
+@JsonSerializable()
 class Club implements DomainObject {
   @override
   String id;
@@ -183,11 +182,13 @@ class Club implements DomainObject {
       this.skillPool,
       this.trainerPool);
 
-  ///Trainer
+  factory Club.fromJson(Map<String, dynamic> json) => _$ClubFromJson(json);
 
+  Map<String, dynamic> toJson() => _$ClubToJson(this);
 }
 
 ///Trainingsgruppen
+@JsonSerializable()
 class Adventure implements DomainObject {
   @override
   String id;
@@ -210,9 +211,14 @@ class Adventure implements DomainObject {
 
   Adventure(this.id, this.image, this.title, this.story, this.trainings,
       this.trainer, this.player);
+
+  factory Adventure.fromJson(Map<String, dynamic> json) => _$AdventureFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AdventureToJson(this);
 }
 
 ///Ein Training
+@JsonSerializable()
 class Quest implements DomainObject {
   @override
   String id;
@@ -237,23 +243,34 @@ class Quest implements DomainObject {
   List<Participation> participations;
 
   ///Für die Teilnahme
-  List<Resource> reward;
+  //List<Resource> reward;
 
   ///Für die Teilnahme am Training
   num xp;
 
   Quest(this.id, this.image, this.date, this.duration, this.title, this.story,
-      this.player, this.events, this.participations, this.reward, this.xp);
+      this.player, this.events, this.participations, this.xp);
+
+  factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$QuestToJson(this);
 }
 
+@JsonSerializable()
 class Participation {
   Event event;
   List<Player> players;
 
   Participation(this.event, this.players);
+
+  factory Participation.fromJson(Map<String, dynamic> json) => _$ParticipationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ParticipationToJson(this);
+
 }
 
 ///Aufgabe im Training
+@JsonSerializable()
 class Event implements DomainObject {
   @override
   String id;
@@ -267,13 +284,19 @@ class Event implements DomainObject {
   Exercise exercise;
 
   num xp;
-  List<Resource> reward;
+  //List<Resource> reward;
 
   Event(this.id, this.image, this.title, this.story, this.description,
-      this.exercise, this.xp, this.reward);
+      this.exercise, this.xp);
+
+  factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EventToJson(this);
+
 }
 
 ///Die Übung
+@JsonSerializable()
 class Exercise implements DomainObject {
   @override
   String id;
@@ -287,9 +310,14 @@ class Exercise implements DomainObject {
 
   Exercise(
       this.id, this.image, this.title, this.description, this.difficultyRating);
+
+  factory Exercise.fromJson(Map<String, dynamic> json) => _$ExerciseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExerciseToJson(this);
 }
 
 ///Aufgabe neben dem Training (extra Aufgaben wie: Laufen gehen oder Turniere etc.) Werden im Club geplegt.
+@JsonSerializable()
 class Task implements DomainObject {
   @override
   String id;
@@ -306,22 +334,32 @@ class Task implements DomainObject {
 
   List<Skill> skillRequired;
   num xp;
-  List<Resource> reward;
+  //List<Resource> reward;
 
   Task(this.id, this.image, this.start, this.end, this.title, this.story,
-      this.description, this.skillRequired, this.xp, this.reward);
+      this.description, this.skillRequired, this.xp);
+
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TaskToJson(this);
 }
 
+@JsonSerializable()
 class Level {
   num levelNumber;
   num minXp;
   num maxXp;
 
   Level(this.levelNumber, this.minXp, this.maxXp);
+
+  factory Level.fromJson(Map<String, dynamic> json) => _$LevelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LevelToJson(this);
 }
 
 abstract class CharacterLook {}
 
+@JsonSerializable()
 class Skill implements DomainObject {
   @override
   String id;
@@ -332,6 +370,10 @@ class Skill implements DomainObject {
   String description;
 
   Skill(this.id, this.image, this.name, this.description);
+
+  factory Skill.fromJson(Map<String, dynamic> json) => _$SkillFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SkillToJson(this);
 }
 
 abstract class Resource {
