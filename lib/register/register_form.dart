@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sport_and_gamification_app/authentication_bloc/authentication_bloc.dart';
-import 'package:sport_and_gamification_app/authentication_bloc/bloc.dart';
-import 'package:sport_and_gamification_app/register/register_button.dart';
+import 'package:sport_and_gamification/authentication_bloc/authentication_bloc.dart';
+import 'package:sport_and_gamification/authentication_bloc/bloc.dart';
+import 'package:sport_and_gamification/register/register_button.dart';
 
 import 'bloc/bloc.dart';
 

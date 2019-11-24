@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sport_and_gamification_app/model/model.dart';
+import 'package:repository/repository.dart';
 
 class AccountInfo extends StatelessWidget {
 

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sport_and_gamification_app/model/model.dart';
-import 'package:sport_and_gamification_app/profile/account_info.dart';
+import 'package:repository/repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sport_and_gamification/app/profile/account_info.dart';
 
 class CreateUserPage extends StatefulWidget {
   CreateUserPage({this.id, this.email});

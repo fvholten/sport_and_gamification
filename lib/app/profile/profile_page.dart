@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sport_and_gamification_app/model/model.dart';
-import 'package:sport_and_gamification_app/profile/account_info.dart';
+import 'package:repository/repository.dart';
+
+import 'account_info.dart';
 
 class ProfilePage extends StatefulWidget {
 

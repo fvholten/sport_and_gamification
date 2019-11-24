@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sport_and_gamification_app/common/common.dart';
+import 'package:sport_and_gamification/common/common.dart';
 
 class SplashScreen extends StatelessWidget {
   @override

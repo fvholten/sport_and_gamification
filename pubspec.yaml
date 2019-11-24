@@ -1,4 +1,4 @@
-name: sport_and_gamification_app
+name: sport_and_gamification
 description: A new Flutter project.
 
 version: 1.0.0+1
@@ -13,13 +13,15 @@ dependencies:
   user_repository:
     path: user_repository
 
+  repository:
+    path: repository
+
   flutter_bloc: ^2.0.1
 
   firebase_core: ^0.4.0+9
   firebase_analytics: ^5.0.2
   cloud_firestore: ^0.12.10+2
 
-  json_serializable: ^3.2.3
   json_annotation: ^3.0.0
   font_awesome_flutter: ^8.4.0
 

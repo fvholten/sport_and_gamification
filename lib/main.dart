@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sport_and_gamification_app/simple_bloc_delegate.dart';
-import 'package:sport_and_gamification_app/theme/style.dart';
+import 'package:sport_and_gamification/simple_bloc_delegate.dart';
+import 'package:sport_and_gamification/theme/style.dart';
 import 'package:user_repository/user_repository.dart';
 
+import 'app/app_screen.dart';
 import 'authentication_bloc/bloc.dart';
-import 'home/home.dart';
 import 'login/login.dart';
 import 'splash/splash.dart';
 
@@ -45,7 +45,7 @@ class App extends StatelessWidget {
             return LoginScreen(userRepository: _userRepository);
           }
           if (state is Authenticated) {
-            return HomePage(userRepository: _userRepository,);
+            return AppScreen(userRepository: _userRepository,);
           }
           return SplashScreen();
         },

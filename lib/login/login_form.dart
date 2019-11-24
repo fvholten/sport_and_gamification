@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sport_and_gamification_app/authentication_bloc/bloc.dart';
-import 'package:sport_and_gamification_app/common/common.dart';
+import 'package:sport_and_gamification/authentication_bloc/bloc.dart';
+import 'package:sport_and_gamification/common/common.dart';
 import 'package:user_repository/user_repository.dart';
 
 import 'bloc/bloc.dart';

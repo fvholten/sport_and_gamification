@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sport_and_gamification_app/register/register_form.dart';
+import 'package:sport_and_gamification/register/register_form.dart';
 import 'package:user_repository/user_repository.dart';
 
 import 'bloc/bloc.dart';
