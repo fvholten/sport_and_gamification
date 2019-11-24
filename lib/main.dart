@@ -6,6 +6,7 @@ import 'package:sport_and_gamification/theme/style.dart';
 import 'package:user_repository/user_repository.dart';
 
 import 'app/app_screen.dart';
+import 'app/bloc/bloc.dart';
 import 'authentication_bloc/bloc.dart';
 import 'login/login.dart';
 import 'splash/splash.dart';
@@ -15,9 +16,19 @@ void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
   runApp(
-    BlocProvider(
-      builder: (context) => AuthenticationBloc(userRepository: userRepository)
-        ..add(AppStarted()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<NavigationBloc>(
+          builder: (context) => NavigationBloc(),
+        ),
+        BlocProvider<PlayerBloc>(
+          builder: (context) => PlayerBloc(),
+        ),
+        BlocProvider<AuthenticationBloc>(
+            builder: (context) =>
+                AuthenticationBloc(userRepository: userRepository)
+                  ..add(AppStarted()))
+      ],
       child: App(userRepository: userRepository),
     ),
   );
@@ -45,7 +56,9 @@ class App extends StatelessWidget {
             return LoginScreen(userRepository: _userRepository);
           }
           if (state is Authenticated) {
-            return AppScreen(userRepository: _userRepository,);
+            return AppScreen(
+              userRepository: _userRepository,
+            );
           }
           return SplashScreen();
         },
