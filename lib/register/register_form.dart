@@ -1,147 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sport_and_gamification/authentication_bloc/authentication_bloc.dart';
-import 'package:sport_and_gamification/authentication_bloc/bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_and_gamification/common/email_password.dart';
+import 'package:sport_and_gamification/common/email_password_widget.dart';
+import 'package:sport_and_gamification/common/loading_indecator.dart';
 import 'package:sport_and_gamification/register/register_button.dart';
+import 'package:sport_and_gamification/services/authentication_provider.dart';
 
-import 'bloc/bloc.dart';
-
-class RegisterForm extends StatefulWidget {
-  State<RegisterForm> createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<RegisterForm> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  RegisterBloc _registerBloc;
-
-  bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
-
-  bool isRegisterButtonEnabled(RegisterState state) {
-    return state.isFormValid && isPopulated && !state.isSubmitting;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _registerBloc = BlocProvider.of<RegisterBloc>(context);
-    _emailController.addListener(_onEmailChanged);
-    _passwordController.addListener(_onPasswordChanged);
-  }
-
+class RegisterFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RegisterBloc, RegisterState>(
-      listener: (context, state) {
-        if (state.isSubmitting) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Registering...'),
-                    CircularProgressIndicator(),
-                  ],
+    return Consumer2<AuthenticationProvider, EmailPassword>(
+        builder: (context, auth, emailPass, child) {
+      if (auth.registerState == RegisterState.loading) {
+        return LoadingIndicator();
+      }
+      if (auth.registerState == RegisterState.success) {
+        auth.isSignedIn();
+        Navigator.of(context).pop();
+      }
+      return Padding(
+          padding: EdgeInsets.all(20),
+          child: Form(
+            child: ListView(
+              children: <Widget>[
+                EmailPasswordWidget(),
+                (auth.registerState == RegisterState.failed)
+                    ? Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Registration Failed!'),
+                      Icon(
+                        Icons.error,
+                        color: Colors.red,
+                      )
+                    ],
+                  ),
+                )
+                    : Container(),
+                RegisterButton(
+                  onPressed: _isLoginButtonEnabled(auth, emailPass)
+                      ? () => auth.signUp(
+                            emailPass.email,
+                            emailPass.password,
+                          )
+                      : null,
                 ),
-              ),
-            );
-        }
-        if (state.isSuccess) {
-          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
-          Navigator.of(context).pop();
-        }
-        if (state.isFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Registration Failure'),
-                    Icon(Icons.error),
-                  ],
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-        }
-      },
-      child: BlocBuilder<RegisterBloc, RegisterState>(
-        builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.all(20),
-            child: Form(
-              child: ListView(
-                children: <Widget>[
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email',
-                    ),
-                    autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isEmailValid ? 'Invalid Email' : null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
-                    ),
-                    obscureText: true,
-                    autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isPasswordValid ? 'Invalid Password' : null;
-                    },
-                  ),
-                  RegisterButton(
-                    onPressed: isRegisterButtonEnabled(state)
-                        ? _onFormSubmitted
-                        : null,
-                  ),
-                ],
-              ),
+              ],
             ),
-          );
-        },
-      ),
-    );
+          ));
+    });
   }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _onEmailChanged() {
-    _registerBloc.add(
-      EmailChanged(email: _emailController.text),
-    );
-  }
-
-  void _onPasswordChanged() {
-    _registerBloc.add(
-      PasswordChanged(password: _passwordController.text),
-    );
-  }
-
-  void _onFormSubmitted() {
-    _registerBloc.add(
-      Submitted(
-        email: _emailController.text,
-        password: _passwordController.text,
-      ),
-    );
+  bool _isLoginButtonEnabled(
+      AuthenticationProvider auth, EmailPassword emailPassword) {
+    return emailPassword.isValid() &&
+        auth.registerState != RegisterState.loading;
   }
 }

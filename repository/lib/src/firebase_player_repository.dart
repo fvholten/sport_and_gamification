@@ -9,10 +9,13 @@ class FirebasePlayerRepository implements PlayerRepository {
 
   @override
   Future<Player> getPlayer(String id) {
-    return playerCollection
-        .document(id)
-        .get()
-        .then((snapshot) => Player.fromJson(snapshot.data));
+    print('getPlayer was called:' + id);
+    return playerCollection.document(id).get().then((snapshot) {
+      if (snapshot.exists) {
+        return Player.fromJson(snapshot.data);
+      }
+      return null;
+    });
   }
 
   @override

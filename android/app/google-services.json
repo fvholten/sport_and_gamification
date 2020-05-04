@@ -8,12 +8,57 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:679492414381:android:2f9441b729528abaf58f24",
+        "android_client_info": {
+          "package_name": "com.sport.gamification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679492414381-ul8bc69p819k8jd7jqs0g1b7sqqrcjpq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sport.gamification",
+            "certificate_hash": "7135f89ee959b93993ed802b1f6f91420ae98d35"
+          }
+        },
+        {
+          "client_id": "679492414381-tbh71b3jkon4et35k9c2kmvm64fdikj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkWddOWnlVBTcM5lu6-0YxqQEUKyC_w_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679492414381-tbh71b3jkon4et35k9c2kmvm64fdikj5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:679492414381:android:7f7ac9be694b0fbdf58f24",
         "android_client_info": {
           "package_name": "com.sport.gamification.sport_and_gamification_app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "679492414381-k0gu36cpfjd9m0a1ja885vf51c1fnedo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sport.gamification.sport_and_gamification_app",
+            "certificate_hash": "7135f89ee959b93993ed802b1f6f91420ae98d35"
+          }
+        },
         {
           "client_id": "679492414381-tbh71b3jkon4et35k9c2kmvm64fdikj5.apps.googleusercontent.com",
           "client_type": 3

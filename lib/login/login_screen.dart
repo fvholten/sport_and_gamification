@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_and_gamification/common/email_password.dart';
+import 'package:sport_and_gamification/login/login_form.dart';
 
-import 'bloc/login_bloc.dart';
-import 'login.dart';
 
 class LoginScreen extends StatelessWidget {
-  final UserRepository _userRepository;
 
-  LoginScreen({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(title: Text('Login')),
-      body: BlocProvider<LoginBloc>(
-        builder: (context) => LoginBloc(userRepository: _userRepository),
-        child: LoginForm(userRepository: _userRepository),
+      body: ChangeNotifierProvider(
+        create: (context) => EmailPassword(),
+        child: LoginFormWidget(_scaffoldKey),
       ),
     );
   }

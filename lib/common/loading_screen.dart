@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sport_and_gamification/common/common.dart';
 
-class SplashScreen extends StatelessWidget {
+import 'logo.dart';
+
+class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +21,6 @@ class SplashScreen extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .headline
-                  .apply(color: Colors.white),
             ),
           )
         ],

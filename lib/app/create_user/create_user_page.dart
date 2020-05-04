@@ -1,26 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:repository/repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sport_and_gamification/app/profile/account_info.dart';
+import 'package:sport_and_gamification/app/services/navigation_provider.dart';
+import 'package:sport_and_gamification/services/authentication_provider.dart';
 
 class CreateUserPage extends StatefulWidget {
-  CreateUserPage({this.id, this.email});
-
-  final String id;
-  final String email;
 
   @override
   State<StatefulWidget> createState() =>
-      new _CreateUserState(id: id, email: email);
+      new _CreateUserState();
 }
 
 class _CreateUserState extends State<CreateUserPage> {
-  _CreateUserState({this.id, this.email});
-
-  final String id;
-  final String email;
 
   final Firestore db = Firestore.instance;
 
@@ -48,7 +43,7 @@ class _CreateUserState extends State<CreateUserPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Hi!\nTODO',
+                  'Hi!',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
@@ -71,10 +66,9 @@ class _CreateUserState extends State<CreateUserPage> {
                       },
                       maxLength: 35),
                 ),
-                Text(player.name)
               ],
             ),
-            false),
+            false, context),
         makePage(
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +92,7 @@ class _CreateUserState extends State<CreateUserPage> {
                 )
               ],
             ),
-            false),
+            false, context),
         makePage(
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -122,22 +116,22 @@ class _CreateUserState extends State<CreateUserPage> {
                 )
               ],
             ),
-            false),
+            false, context),
         makePage(
             Center(
               child: Padding(
                 padding: EdgeInsets.all(10),
-                child: AccountInfo(player: player)
+                child: AccountInfo()
               ),
             ),
-            true)
+            true, context)
       ],
     ));
   }
 
   int fabCount = 0;
 
-  Widget makePage(Widget content, bool isLast) {
+  Widget makePage(Widget content, bool isLast, BuildContext context) {
     fabCount++;
     return new Scaffold(
       body: content,
@@ -156,11 +150,14 @@ class _CreateUserState extends State<CreateUserPage> {
   }
 
   void saveToFireStore() {
-    player.id = id;
-    player.email = email;
+    AuthenticationProvider auth = Provider.of<AuthenticationProvider>(context, listen: false);
+
+    player.id = auth.user.uid;
+    player.email = auth.user.email;
+    player.image = auth.user.photoUrl;
     print(player.toJson());
-    db.collection('players').document(id).setData(player.toJson()).then((_x) {
-      Navigator.pop(context);
+    db.collection('players').document(auth.user.uid).setData(player.toJson()).then((_x) {
+      Provider.of<NavigationProvider>(context).state = NavigationState.Home;
     });
   }
 

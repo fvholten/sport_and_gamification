@@ -1,67 +1,70 @@
+import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sport_and_gamification/simple_bloc_delegate.dart';
+import 'package:provider/provider.dart';
+import 'package:repository/repository.dart';
+import 'package:sport_and_gamification/app/services/model_provider.dart';
+import 'package:sport_and_gamification/common/loading_screen.dart';
+import 'package:sport_and_gamification/login/login_screen.dart';
+import 'package:sport_and_gamification/services/authentication_gate.dart';
 import 'package:sport_and_gamification/theme/style.dart';
 import 'package:user_repository/user_repository.dart';
 
 import 'app/app_screen.dart';
-import 'app/bloc/bloc.dart';
-import 'authentication_bloc/bloc.dart';
-import 'login/login.dart';
-import 'splash/splash.dart';
+import 'app/services/navigation_provider.dart';
+import 'services/authentication_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider<NavigationBloc>(
-          builder: (context) => NavigationBloc(),
-        ),
-        BlocProvider<PlayerBloc>(
-          builder: (context) => PlayerBloc(),
-        ),
-        BlocProvider<AuthenticationBloc>(
-            builder: (context) =>
-                AuthenticationBloc(userRepository: userRepository)
-                  ..add(AppStarted()))
-      ],
-      child: App(userRepository: userRepository),
-    ),
-  );
+  final AuthenticationGate authenticationGate = AuthenticationGate();
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<AuthenticationGate>(
+        create: (_) => authenticationGate),
+    ChangeNotifierProvider<AuthenticationProvider>(
+        create: (_) => AuthenticationProvider(
+            userRepository: userRepository, authGate: authenticationGate)),
+  ], child: App()));
 }
 
 class App extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  App({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    Widget currentWidget;
+
     return MaterialApp(
       title: 'Sport and Gamification',
       theme: appTheme(),
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-          if (state is Uninitialized) {
-            return SplashScreen();
+      home: SplashScreen.navigate(
+        name: 'assets/splash_intro.flr',
+        next: (context) =>
+            Consumer<AuthenticationGate>(builder: ((context, gate, child) {
+          AuthenticationProvider auth =
+              Provider.of<AuthenticationProvider>(context, listen: false);
+          if (AuthState.uninitialized == gate.state) {
+            auth.isSignedIn();
+            if (!(currentWidget is LoadingScreen)) {
+              currentWidget = LoadingScreen();
+            }
+          } else if (AuthState.unauthenticated == gate.state ||
+              AuthState.loggedOut == gate.state &&
+                  !(currentWidget is LoginScreen)) {
+            currentWidget = LoginScreen();
+          } else if (AuthState.loggedIn == gate.state) {
+            currentWidget = MultiProvider(providers: [
+              ChangeNotifierProvider<NavigationProvider>(
+                create: (_) => NavigationProvider(),
+              ),
+              ChangeNotifierProvider<ModelProvider>(
+                create: (_) => ModelProvider()
+                  ..loadPlayer(new FirebasePlayerRepository(), auth.user.uid),
+              )
+            ], child: AppScreen());
           }
-          if (state is Unauthenticated) {
-            return LoginScreen(userRepository: _userRepository);
-          }
-          if (state is Authenticated) {
-            return AppScreen(
-              userRepository: _userRepository,
-            );
-          }
-          return SplashScreen();
-        },
+          return currentWidget;
+        })),
+        until: () => Future.delayed(Duration(seconds: 1, milliseconds: 30)),
+        backgroundColor: Colors.white,
+        startAnimation: 'intro',
       ),
     );
   }
