@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sport_and_gamification/app/services/model_provider.dart';
 
 class AccountInfo extends StatelessWidget {
+
   File _image;
 
   Future getImage() async {
@@ -39,7 +40,7 @@ class AccountInfo extends StatelessWidget {
                         child: model.player.image == null
                             ? Image.asset('assets/wikinger.png',
                                 fit: BoxFit.contain)
-                            : null,
+                            : Image.network(model.player.image),
                       ),
                     ),
                   ),

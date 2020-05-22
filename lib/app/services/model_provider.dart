@@ -10,6 +10,12 @@ class ModelProvider extends ChangeNotifier {
 
   Player get player => _player;
 
+
+  set player(Player value) {
+    _player = value;
+    notifyListeners();
+  }
+
   void loadPlayer(FirebasePlayerRepository playerRepository, String id) async {
     this._player = await playerRepository.getPlayer(id);
     _loading = false;

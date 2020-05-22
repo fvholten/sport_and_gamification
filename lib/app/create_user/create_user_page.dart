@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:repository/repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sport_and_gamification/app/profile/account_info.dart';
+import 'package:sport_and_gamification/app/services/model_provider.dart';
 import 'package:sport_and_gamification/app/services/navigation_provider.dart';
 import 'package:sport_and_gamification/services/authentication_provider.dart';
 
@@ -19,17 +20,21 @@ class _CreateUserState extends State<CreateUserPage> {
 
   final Firestore db = Firestore.instance;
 
-  Player player = new Player()
-    ..name = ""
-    ..description = ""
-    ..history = "";
+  Player player;
 
   PageController _pageController = PageController(viewportFraction: 1);
 
   @override
   void initState() {
     super.initState();
-  }
+    AuthenticationProvider auth = Provider.of<AuthenticationProvider>(context, listen: false);
+    player = new Player()
+      ..name = ""
+      ..description = ""
+      ..history = ""
+      ..id = auth.user.uid
+      ..email = auth.user.email
+      ..image = auth.user.photoUrl;  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +73,7 @@ class _CreateUserState extends State<CreateUserPage> {
                 ),
               ],
             ),
-            false, context),
+            false),
         makePage(
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +97,7 @@ class _CreateUserState extends State<CreateUserPage> {
                 )
               ],
             ),
-            false, context),
+            false),
         makePage(
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +121,7 @@ class _CreateUserState extends State<CreateUserPage> {
                 )
               ],
             ),
-            false, context),
+            false),
         makePage(
             Center(
               child: Padding(
@@ -124,15 +129,20 @@ class _CreateUserState extends State<CreateUserPage> {
                 child: AccountInfo()
               ),
             ),
-            true, context)
+            true)
       ],
     ));
   }
 
   int fabCount = 0;
 
-  Widget makePage(Widget content, bool isLast, BuildContext context) {
+  Widget makePage(Widget content, bool isLast) {
     fabCount++;
+
+    if (isLast) {
+      Provider.of<ModelProvider>(context).player = player;
+    }
+
     return new Scaffold(
       body: content,
       floatingActionButton: new FloatingActionButton(
@@ -150,13 +160,8 @@ class _CreateUserState extends State<CreateUserPage> {
   }
 
   void saveToFireStore() {
-    AuthenticationProvider auth = Provider.of<AuthenticationProvider>(context, listen: false);
-
-    player.id = auth.user.uid;
-    player.email = auth.user.email;
-    player.image = auth.user.photoUrl;
     print(player.toJson());
-    db.collection('players').document(auth.user.uid).setData(player.toJson()).then((_x) {
+    db.collection('players').document(player.id).setData(player.toJson()).then((_x) {
       Provider.of<NavigationProvider>(context).state = NavigationState.Home;
     });
   }
